@@ -1,0 +1,10 @@
+<div class="mydocs-container">
+  <div class="mydocs-container-title">
+    My Docs
+  </div>
+  <div class="my-docs-list-container">
+    <div *ngFor="let doc of myDocsList">
+      <app-doc-cell (docDeleted)="cellDeleted()" [doc]="doc"></app-doc-cell>
+    </div>
+  </div>
+</div>
