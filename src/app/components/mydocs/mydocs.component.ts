@@ -1,4 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import { DocModel } from 'src/app/models/DocModel';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { DocsService } from 'src/app/services/docs.service';
 
 @Component({
   selector: 'app-mydocs',
@@ -7,10 +10,24 @@ import {Component, OnInit} from '@angular/core';
 })
 export class MydocsComponent implements OnInit {
 
-  constructor() {
+  myDocsList: DocModel[] = [];
+
+  constructor(private docService: DocsService,
+            private authService: AuthenticationService) {
   }
 
   ngOnInit(): void {
+    if (this.authService.currentUserValue && this.authService.currentUserValue.id) {
+      this.docService.getMyDocs(this.authService.currentUserValue.id)
+      .subscribe(
+        data => {
+          this.myDocsList = data;
+        },
+        error => {
+          console.log('Failed to fetch docs: '+error);
+        }
+      ); 
+    }
   }
 
 }

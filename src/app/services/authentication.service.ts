@@ -4,6 +4,7 @@ import {UserModel} from '../models/UserModel';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {CookieService} from 'ngx-cookie-service';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): Observable<UserModel> | null {
-    const url = 'http://demo7776459.mockable.io/login';
+    const url = `${environment.base_url}:${environment.auth_port}/login`;
     return this.httpClient.post<UserModel>(url, {username, password})
       .pipe(
         map(userModel => {
@@ -54,8 +55,7 @@ export class AuthenticationService {
   }
 
   registerUser(formData: any): Observable<UserModel> {
-    // const url = 'http://demo7776459.mockable.io/register';
-    const url = 'http://localhost:9999/user/create';
+    const url = `${environment.base_url}:${environment.auth_port}/user/create`;
     return this.httpClient.post<UserModel>(url, formData)
       .pipe(
         map(userModel => {
