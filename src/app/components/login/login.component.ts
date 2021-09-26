@@ -39,10 +39,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
+
   onSubmit() {
     this.submitted = true;
     if (this.loginForm?.invalid) {
-      return false;
+      return;
     }
     this.loading = true;
     // @ts-ignore

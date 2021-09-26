@@ -1,9 +1,9 @@
 export class DocModel {
-  id: string | undefined;
-  content: string | undefined;
-  userId: string | undefined;
-  title: string | undefined;
-  available: string | undefined;
-  createdAt: string | undefined;
-  updatedAt: string | undefined;
+  id ?: string;
+  content ?: string;
+  userId ?: string;
+  title ?: string;
+  available ?: string;
+  createdAt ?: string;
+  updatedAt ?: string;
 }

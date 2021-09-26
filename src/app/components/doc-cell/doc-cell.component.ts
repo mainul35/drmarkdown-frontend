@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DocModel} from '../../models/DocModel';
 import {AuthenticationService} from '../../services/authentication.service';
+import {DocsService} from '../../services/docs.service';
 
 @Component({
   selector: 'app-doc-cell',
@@ -10,11 +11,11 @@ import {AuthenticationService} from '../../services/authentication.service';
 export class DocCellComponent implements OnInit {
 
   @Input()
-  doc: DocModel | undefined;
+  doc ?: DocModel;
   @Output()
   docDeleted: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private authenticationService: AuthenticationService) {
+  constructor(private authenticationService: AuthenticationService, private docService: DocsService) {
   }
 
   ngOnInit(): void {
@@ -22,14 +23,23 @@ export class DocCellComponent implements OnInit {
 
   deleteDocument($event: MouseEvent) {
     // TODO: Call API delete document endpoint
-    alert(`Doc ${this.doc?.id} has been deleted.`);
+    this.docService.deleteDocument(this.doc?.id)
+      .subscribe(
+        data => {
+          this.docDeleted.emit(this.doc?.id);
+        },
+        e => {
+          console.log('Error: ', e);
+          alert('Failed to delete document');
+        }
+      );
     // If successful
     // TODO: Notify the parent ->
-    this.docDeleted.emit(this.doc?.id);
+
   }
 
   currentUserIsOwner() {
-    if (this.doc == null || this.doc.id || this.authenticationService.currentUserValue == null) {
+    if (this.doc == null || this.doc.id == null || this.authenticationService.currentUserValue == null) {
       return false;
     }
     const docOwner = this.doc?.userId;

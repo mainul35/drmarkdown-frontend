@@ -4,6 +4,7 @@ import {UserModel} from '../models/UserModel';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {CookieService} from 'ngx-cookie-service';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import {CookieService} from 'ngx-cookie-service';
 export class AuthenticationService {
 
   static USER_INFO = 'USER_INFO';
+  static TOKEN = 'TOKEN';
   public currentUser$: Observable<UserModel>;
   /*
   * ======================================================
@@ -38,15 +40,17 @@ export class AuthenticationService {
   logout() {
     // Delete the cookie
     this.cookieService.delete(AuthenticationService.USER_INFO);
+    // @ts-ignore
     this.userInfoSubject.next(null);
   }
 
   login(username: string, password: string): Observable<UserModel> | null {
-    const url = 'http://demo7776459.mockable.io/login';
-    return this.httpClient.post<UserModel>(url, {username, password})
+    const url = '/user/login';
+    return this.httpClient.post<UserModel>(environment.AUTH_SERVER + url, {username, password})
       .pipe(
         map(userModel => {
           this.cookieService.set(AuthenticationService.USER_INFO, JSON.stringify(userModel));
+          this.cookieService.set(AuthenticationService.TOKEN, JSON.stringify(userModel.jwtToken));
           this.userInfoSubject.next(userModel);
           return userModel;
         })
@@ -54,12 +58,12 @@ export class AuthenticationService {
   }
 
   registerUser(formData: any): Observable<UserModel> {
-    // const url = 'http://demo7776459.mockable.io/register';
-    const url = 'http://localhost:9999/user/create';
-    return this.httpClient.post<UserModel>(url, formData)
+    const url = '/user/create';
+    return this.httpClient.post<UserModel>(environment.AUTH_SERVER + url, formData)
       .pipe(
         map(userModel => {
           this.cookieService.set(AuthenticationService.USER_INFO, JSON.stringify(userModel));
+          this.cookieService.set(AuthenticationService.TOKEN, JSON.stringify(userModel.jwtToken));
           this.userInfoSubject.next(userModel);
           return userModel;
         })

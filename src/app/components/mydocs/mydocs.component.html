@@ -4,7 +4,7 @@
   </div>
   <div class="my-docs-list-container">
     <div *ngFor="let doc of myDocsList">
-      <app-doc-cell (docDeleted)="cellDeleted()" [doc]="doc"></app-doc-cell>
+      <app-doc-cell (docDeleted)="cellDeleted($event)" [doc]="doc" id="{{doc.id}}"></app-doc-cell>
     </div>
   </div>
 </div>
