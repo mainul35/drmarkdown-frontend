@@ -10,9 +10,10 @@ import {LoginComponent} from './components/login/login.component';
 import {MydocsComponent} from './components/mydocs/mydocs.component';
 import {DocCellComponent} from './components/doc-cell/doc-cell.component';
 import {RegisterComponent} from './components/register/register.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
+import {DocComponent} from './components/doc/doc.component';
 
 @NgModule({
   declarations: [
@@ -22,14 +23,16 @@ import {CookieService} from 'ngx-cookie-service';
     LoginComponent,
     MydocsComponent,
     DocCellComponent,
-    RegisterComponent
+    RegisterComponent,
+    DocComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     MarkdownModule.forRoot(),
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     CookieService

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DocModel} from '../../models/DocModel';
+import {DocsService} from '../../services/docs.service';
 
 @Component({
   selector: 'app-home',
@@ -10,15 +11,17 @@ export class HomeComponent implements OnInit {
 
   recentDocs: DocModel[] = [];
 
-  constructor() {
-    this.recentDocs.push(new DocModel());
-    this.recentDocs.push(new DocModel());
-    this.recentDocs.push(new DocModel());
-    this.recentDocs.push(new DocModel());
-    this.recentDocs.push(new DocModel());
+  constructor(private docsService: DocsService) {
   }
 
   ngOnInit(): void {
+    this.docsService.fetchRecentDocs().subscribe(
+      data => {
+        this.recentDocs = data;
+      },
+      error => {
+        console.error(`Error: ${error.message}`);
+      }
+    );
   }
-
 }

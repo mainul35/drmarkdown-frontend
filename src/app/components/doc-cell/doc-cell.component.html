@@ -1,10 +1,10 @@
-<div class="doc-cell-container">
+<div (click)="cellClicked()" class="doc-cell-container">
   <div class="doc-title-container">
     {{doc?.title}}
   </div>
   <div class="doc-info-container">
     <div class="doc-updated-at-container">
-      {{doc?.updatedAt}}
+      {{doc?.updatedAt | date: 'short' }}
     </div>
     <div *ngIf="currentUserIsOwner()" class="doc-is-public-container">
       {{doc?.available}}

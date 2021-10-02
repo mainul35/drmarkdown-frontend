@@ -17,7 +17,7 @@ export class DocsService {
   }
 
   getMyDocs(id: string): Observable<DocModel[]> {
-    const url = `${environment.RESOURCE_SERVER}/doc/${id}/all`;
+    const url = `${environment.RESOURCE_SERVER}/doc/all/${id}`;
     const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
     const httpOptions = {
       headers: new HttpHeaders({
@@ -28,7 +28,7 @@ export class DocsService {
   }
 
   deleteDocument(id ?: string) {
-    const url = `${environment.RESOURCE_SERVER}/doc/${id}/delete`;
+    const url = `${environment.RESOURCE_SERVER}/doc/delete/${id}`;
     const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
     const httpOptions = {
       headers: new HttpHeaders({
@@ -36,5 +36,39 @@ export class DocsService {
       })
     };
     return this.httpClient.delete(url, httpOptions);
+  }
+
+  fetchDoc(docIdParam: string): Observable<DocModel> {
+    const url = `${environment.RESOURCE_SERVER}/doc/fetch/${docIdParam}`;
+    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${jwtToken}`
+      })
+    };
+    return this.httpClient.get(url, httpOptions);
+  }
+
+  updateDoc(doc: DocModel) {
+    const url = `${environment.RESOURCE_SERVER}/doc/update`;
+    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${jwtToken}`
+      })
+    };
+    return this.httpClient.put(url, doc, httpOptions);
+  }
+
+  fetchRecentDocs(): Observable<DocModel[]> {
+    const url = `${environment.RESOURCE_SERVER}/doc/recent`;
+    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${jwtToken}`
+      })
+    };
+    // @ts-ignore
+    return this.httpClient.get(url, httpOptions);
   }
 }
