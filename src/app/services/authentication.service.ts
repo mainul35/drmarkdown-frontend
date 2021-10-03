@@ -5,11 +5,12 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {CookieService} from 'ngx-cookie-service';
 import {environment} from '../../environments/environment';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
+export class AuthenticationService implements CanActivate {
 
   static USER_INFO = 'USER_INFO';
   static TOKEN = 'TOKEN';
@@ -22,7 +23,7 @@ export class AuthenticationService {
   * */
   private userInfoSubject: BehaviorSubject<UserModel>;
 
-  constructor(private httpClient: HttpClient, private cookieService: CookieService) {
+  constructor(private httpClient: HttpClient, private cookieService: CookieService, private router: Router) {
     const jsonString = this.cookieService.get(AuthenticationService.USER_INFO);
     if (jsonString === '') {
       // @ts-ignore
@@ -31,6 +32,25 @@ export class AuthenticationService {
       this.userInfoSubject = new BehaviorSubject<UserModel>(JSON.parse(this.cookieService.get(AuthenticationService.USER_INFO)));
     }
     this.currentUser$ = this.userInfoSubject.asObservable();
+  }
+
+  /**
+   * =====================================================
+   * This canActivate method is overriden and will work
+   * for handling the logic of checking is a user is
+   * logged in or not, and will perform necessary actions.
+   * Only implementing this method is not enough. We will
+   * also have to add canActivate: attribute in our routes
+   * definition.
+   * =====================================================
+   * */
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    if (this.currentUserValue != null) {
+      return true;
+    } else {
+      this.router.navigate(['/login']);
+      return false;
+    }
   }
 
   public get currentUserValue() {

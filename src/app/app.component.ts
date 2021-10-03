@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {SpinnerService} from './services/spinner.service';
+import {Spinkit} from 'ng-http-loader';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import {SpinnerService} from './services/spinner.service';
 })
 export class AppComponent {
   title = 'frontend';
+  public spinkit = Spinkit;
 
   constructor(public spinnerService: SpinnerService) {
   }

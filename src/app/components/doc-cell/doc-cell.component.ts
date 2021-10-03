@@ -3,6 +3,7 @@ import {DocModel} from '../../models/DocModel';
 import {AuthenticationService} from '../../services/authentication.service';
 import {DocsService} from '../../services/docs.service';
 import {Router} from '@angular/router';
+import {SpinnerVisibilityService} from 'ng-http-loader';
 
 @Component({
   selector: 'app-doc-cell',
@@ -24,6 +25,7 @@ export class DocCellComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService,
               private docService: DocsService,
               private router: Router,
+              private spinner: SpinnerVisibilityService
   ) {
   }
 
@@ -32,14 +34,17 @@ export class DocCellComponent implements OnInit {
 
   deleteDocument($event: MouseEvent) {
     // TODO: Call API delete document endpoint
+    this.spinner.show();
     this.docService.deleteDocument(this.doc?.id)
       .subscribe(
         data => {
           this.docDeleted.emit(this.doc?.id);
+          this.spinner.hide();
         },
         e => {
           console.log('Error: ', e);
           alert('Failed to delete document');
+          this.spinner.hide();
         }
       );
     // If successful
@@ -69,16 +74,19 @@ export class DocCellComponent implements OnInit {
     const updatedAtTemp = this.doc.updatedAt;
     this.doc.updatedAt = '';
     this.doc.available = status;
+    this.spinner.show();
     this.docService.updateDoc(this.doc)
       .subscribe(
         data => {
           this.doc = data;
           this.availabilityChanged.emit();
+          this.spinner.hide();
         },
         error => {
           this.doc.available = !status;
           this.doc.updatedAt = updatedAtTemp;
           console.error('Error: ' + error.getMessage());
+          this.spinner.hide();
         }
       );
   }

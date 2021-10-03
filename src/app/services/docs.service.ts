@@ -13,7 +13,7 @@ export class DocsService {
 
   public docs: Observable<DocModel[]> = of([]);
 
-  constructor(private httpClient: HttpClient, private cookieService: CookieService) {
+  constructor(private httpClient: HttpClient, private cookieService: CookieService, private authService: AuthenticationService) {
   }
 
   getMyDocs(id: string): Observable<DocModel[]> {
@@ -45,7 +45,7 @@ export class DocsService {
 
   createDoc(doc: DocModel) {
     const url = `${environment.RESOURCE_SERVER}/doc/create`;
-    doc.userId = JSON.parse(this.cookieService.get(AuthenticationService.USER_INFO)).id;
+    doc.userId = this.authService.currentUserValue.id;
     // const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
     // const httpOptions = {
     //   headers: new HttpHeaders({

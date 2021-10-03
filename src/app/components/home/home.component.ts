@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DocModel} from '../../models/DocModel';
 import {DocsService} from '../../services/docs.service';
+import {SpinnerVisibilityService} from 'ng-http-loader';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,7 @@ export class HomeComponent implements OnInit {
 
   recentDocs: DocModel[] = [];
 
-  constructor(private docsService: DocsService) {
+  constructor(private docsService: DocsService, private spinner: SpinnerVisibilityService) {
   }
 
   ngOnInit(): void {
@@ -23,12 +24,15 @@ export class HomeComponent implements OnInit {
   }
 
   fetchRecentDocs() {
+    this.spinner.show();
     this.docsService.fetchRecentDocs().subscribe(
       data => {
         this.recentDocs = data;
+        this.spinner.hide();
       },
       error => {
         console.error(`Error: ${error.message}`);
+        this.spinner.hide();
       }
     );
   }

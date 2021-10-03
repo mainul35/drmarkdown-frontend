@@ -15,6 +15,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {DocComponent} from './components/doc/doc.component';
 import {CustomHttpInterceptor} from './interceptors/http-interceptor';
+import {NgHttpLoaderModule} from 'ng-http-loader';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {CustomHttpInterceptor} from './interceptors/http-interceptor';
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+    NgHttpLoaderModule.forRoot()
   ],
   providers: [
     CookieService,
