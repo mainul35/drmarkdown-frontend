@@ -3,7 +3,7 @@ export class DocModel {
   content ?: string;
   userId ?: string;
   title ?: string;
-  available ?: string;
+  available ?: boolean;
   createdAt ?: string;
   updatedAt ?: string;
 }

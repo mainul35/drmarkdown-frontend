@@ -26,6 +26,8 @@ export class DocComponent implements OnInit {
   ngOnInit(): void {
     if (this.docIdParam) {
       this.fetchDocument();
+    } else {
+      this.doc = new DocModel();
     }
   }
 
@@ -41,17 +43,31 @@ export class DocComponent implements OnInit {
     this.doc.content = this.content;
     this.doc.updatedAt = '';
     this.doc.title = this.docTitle;
-    this.docsService.updateDoc(this.doc)
-      .subscribe(
-        data => {
-          console.log('Doc saved successfully');
-          this.router.navigate(['/my-docs']);
-        },
-        error => {
-          alert('Failed to save doc');
-          console.error(error);
-        }
-      );
+    if (this.docIdParam) {
+      this.docsService.updateDoc(this.doc)
+        .subscribe(
+          data => {
+            console.log('Doc saved successfully');
+            this.router.navigate(['/my-docs']);
+          },
+          error => {
+            alert('Failed to save doc');
+            console.error(error);
+          }
+        );
+    } else {
+      this.docsService.createDoc(this.doc)
+        .subscribe(
+          data => {
+            console.log('Doc created successfully');
+            this.router.navigate(['/my-docs']);
+          },
+          error => {
+            alert('Failed to save doc');
+            console.error(error);
+          }
+        );
+    }
   }
 
   private fetchDocument() {

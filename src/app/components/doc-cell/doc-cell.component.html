@@ -8,7 +8,8 @@
     </div>
     <div *ngIf="currentUserIsOwner()" class="doc-is-public-container">
       {{doc?.available}}
-      <input [checked]="doc?.available" type="checkbox">
+      <input (change)="cellStatusChanged($event)" (click)="$event.stopPropagation()" [checked]="doc?.available"
+             type="checkbox">
     </div>
     <div *ngIf="currentUserIsOwner()" class="doc-delete-container">
       <button (click)="deleteDocument($event)">Delete</button>

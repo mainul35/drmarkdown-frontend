@@ -11,9 +11,10 @@ import {MydocsComponent} from './components/mydocs/mydocs.component';
 import {DocCellComponent} from './components/doc-cell/doc-cell.component';
 import {RegisterComponent} from './components/register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {DocComponent} from './components/doc/doc.component';
+import {CustomHttpInterceptor} from './interceptors/http-interceptor';
 
 @NgModule({
   declarations: [
@@ -32,10 +33,11 @@ import {DocComponent} from './components/doc/doc.component';
     MarkdownModule.forRoot(),
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [
-    CookieService
+    CookieService,
+    {provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

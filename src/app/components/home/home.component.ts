@@ -15,6 +15,14 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fetchRecentDocs();
+  }
+
+  reloadRecentDocs() {
+    this.fetchRecentDocs();
+  }
+
+  fetchRecentDocs() {
     this.docsService.fetchRecentDocs().subscribe(
       data => {
         this.recentDocs = data;

@@ -12,6 +12,7 @@ const routes: Routes = [
   {path: 'my-docs', component: MydocsComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'doc/:id', component: DocComponent},
+  {path: 'doc', component: DocComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', redirectTo: '/home', pathMatch: 'full'},
 ];

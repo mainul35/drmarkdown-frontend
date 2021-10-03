@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {DocModel} from '../models/DocModel';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthenticationService} from './authentication.service';
@@ -18,57 +18,47 @@ export class DocsService {
 
   getMyDocs(id: string): Observable<DocModel[]> {
     const url = `${environment.RESOURCE_SERVER}/doc/all/${id}`;
-    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${jwtToken}`
-      })
-    };
-    return this.httpClient.get<DocModel[]>(url, httpOptions);
+    return this.httpClient.get<DocModel[]>(url);
   }
 
   deleteDocument(id ?: string) {
     const url = `${environment.RESOURCE_SERVER}/doc/delete/${id}`;
-    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${jwtToken}`
-      })
-    };
-    return this.httpClient.delete(url, httpOptions);
+    return this.httpClient.delete(url);
   }
 
   fetchDoc(docIdParam: string): Observable<DocModel> {
     const url = `${environment.RESOURCE_SERVER}/doc/fetch/${docIdParam}`;
-    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${jwtToken}`
-      })
-    };
-    return this.httpClient.get(url, httpOptions);
+    return this.httpClient.get(url);
   }
 
   updateDoc(doc: DocModel) {
     const url = `${environment.RESOURCE_SERVER}/doc/update`;
-    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${jwtToken}`
-      })
-    };
-    return this.httpClient.put(url, doc, httpOptions);
+    // const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     Authorization: `Bearer ${jwtToken}`
+    //   })
+    // };
+    // return this.httpClient.put(url, doc, httpOptions);
+    return this.httpClient.put(url, doc);
+  }
+
+  createDoc(doc: DocModel) {
+    const url = `${environment.RESOURCE_SERVER}/doc/create`;
+    doc.userId = JSON.parse(this.cookieService.get(AuthenticationService.USER_INFO)).id;
+    // const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     Authorization: `Bearer ${jwtToken}`
+    //   })
+    // };
+    // return this.httpClient.post(url, doc, httpOptions);
+    return this.httpClient.post(url, doc);
   }
 
   fetchRecentDocs(): Observable<DocModel[]> {
     const url = `${environment.RESOURCE_SERVER}/doc/recent`;
-    const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${jwtToken}`
-      })
-    };
     // @ts-ignore
-    return this.httpClient.get(url, httpOptions);
+    return this.httpClient.get(url);
   }
 }

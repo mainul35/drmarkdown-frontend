@@ -4,7 +4,8 @@
   </div>
   <div class="docs-list-container">
     <div *ngFor="let doc of recentDocs">
-      <app-doc-cell [doc]="doc"></app-doc-cell>
+      <app-doc-cell (availabilityChanged)="reloadRecentDocs()" (docDeleted)="reloadRecentDocs()"
+                    [doc]="doc"></app-doc-cell>
     </div>
   </div>
 </div>

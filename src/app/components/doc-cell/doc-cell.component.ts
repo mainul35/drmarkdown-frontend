@@ -12,13 +12,19 @@ import {Router} from '@angular/router';
 export class DocCellComponent implements OnInit {
 
   @Input()
-  doc ?: DocModel;
+    // @ts-ignore
+  doc: DocModel;
+
+  @Output()
+  availabilityChanged: EventEmitter<void> = new EventEmitter<void>();
+
   @Output()
   docDeleted: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private authenticationService: AuthenticationService,
               private docService: DocsService,
-              private router: Router) {
+              private router: Router,
+  ) {
   }
 
   ngOnInit(): void {
@@ -51,8 +57,29 @@ export class DocCellComponent implements OnInit {
   }
 
   cellClicked() {
-    if (this.doc?.id) {
+    if (this.doc?.id && this.currentUserIsOwner()) {
       this.router.navigate(['/doc', this.doc.id]);
+    } else {
+      alert(`This doc with id ${this.doc?.id} is not owned by current user`);
     }
+  }
+
+  cellStatusChanged(event: any) {
+    const status = event.target.checked;
+    const updatedAtTemp = this.doc.updatedAt;
+    this.doc.updatedAt = '';
+    this.doc.available = status;
+    this.docService.updateDoc(this.doc)
+      .subscribe(
+        data => {
+          this.doc = data;
+          this.availabilityChanged.emit();
+        },
+        error => {
+          this.doc.available = !status;
+          this.doc.updatedAt = updatedAtTemp;
+          console.error('Error: ' + error.getMessage());
+        }
+      );
   }
 }
