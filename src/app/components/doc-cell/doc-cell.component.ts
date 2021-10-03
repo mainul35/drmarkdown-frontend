@@ -34,6 +34,7 @@ export class DocCellComponent implements OnInit {
 
   deleteDocument($event: MouseEvent) {
     // TODO: Call API delete document endpoint
+    $event.stopPropagation();
     this.spinner.show();
     this.docService.deleteDocument(this.doc?.id)
       .subscribe(

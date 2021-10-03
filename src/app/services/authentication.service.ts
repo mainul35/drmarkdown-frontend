@@ -21,6 +21,8 @@ export class AuthenticationService implements CanActivate {
   * It is useful for user login / logout events
   * ======================================================
   * */
+
+  // @ts-ignore
   private userInfoSubject: BehaviorSubject<UserModel>;
 
   constructor(private httpClient: HttpClient, private cookieService: CookieService, private router: Router) {
@@ -45,6 +47,7 @@ export class AuthenticationService implements CanActivate {
    * =====================================================
    * */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    this.checkAuthentication();
     if (this.currentUserValue != null) {
       return true;
     } else {
@@ -53,8 +56,33 @@ export class AuthenticationService implements CanActivate {
     }
   }
 
+  private checkAuthentication() {
+    const jsonString = this.cookieService.get(AuthenticationService.USER_INFO);
+    if (jsonString === '') {
+      // @ts-ignore
+      this.userInfoSubject.next(null);
+      // @ts-ignore
+      this.userInfoSubject = new BehaviorSubject<UserModel>(null);
+      this.currentUser$ = this.userInfoSubject.asObservable();
+    } else {
+      this.userInfoSubject = new BehaviorSubject<UserModel>(JSON.parse(this.cookieService.get(AuthenticationService.USER_INFO)));
+    }
+  }
+
   public get currentUserValue() {
     return this.userInfoSubject.value;
+  }
+
+  private updateData() {
+    if (this.cookieService.get(AuthenticationService.USER_INFO) === '') {
+      // @ts-ignore
+      this.userInfoSubject.next(null);
+      // @ts-ignore
+      this.userInfoSubject = new BehaviorSubject<UserModel>(null);
+      this.currentUser$ = this.userInfoSubject.asObservable();
+    } else {
+      this.userInfoSubject = new BehaviorSubject<UserModel>(JSON.parse(this.cookieService.get(AuthenticationService.USER_INFO)));
+    }
   }
 
   logout() {
@@ -70,7 +98,6 @@ export class AuthenticationService implements CanActivate {
       .pipe(
         map(userModel => {
           this.cookieService.set(AuthenticationService.USER_INFO, JSON.stringify(userModel));
-          this.cookieService.set(AuthenticationService.TOKEN, JSON.stringify(userModel.jwtToken));
           this.userInfoSubject.next(userModel);
           return userModel;
         })
@@ -83,7 +110,6 @@ export class AuthenticationService implements CanActivate {
       .pipe(
         map(userModel => {
           this.cookieService.set(AuthenticationService.USER_INFO, JSON.stringify(userModel));
-          this.cookieService.set(AuthenticationService.TOKEN, JSON.stringify(userModel.jwtToken));
           this.userInfoSubject.next(userModel);
           return userModel;
         })

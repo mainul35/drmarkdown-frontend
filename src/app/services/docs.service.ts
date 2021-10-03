@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {DocModel} from '../models/DocModel';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
@@ -45,14 +45,11 @@ export class DocsService {
 
   createDoc(doc: DocModel) {
     const url = `${environment.RESOURCE_SERVER}/doc/create`;
-    doc.userId = this.authService.currentUserValue.id;
-    // const jwtToken = JSON.parse(this.cookieService.get(AuthenticationService.TOKEN));
-    // const httpOptions = {
-    //   headers: new HttpHeaders({
-    //     Authorization: `Bearer ${jwtToken}`
-    //   })
-    // };
-    // return this.httpClient.post(url, doc, httpOptions);
+    if (this.authService.currentUserValue != null) {
+      doc.userId = this.authService.currentUserValue.id;
+    } else {
+      throwError('Login session expired');
+    }
     return this.httpClient.post(url, doc);
   }
 

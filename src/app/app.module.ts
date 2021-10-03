@@ -16,6 +16,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {DocComponent} from './components/doc/doc.component';
 import {CustomHttpInterceptor} from './interceptors/http-interceptor';
 import {NgHttpLoaderModule} from 'ng-http-loader';
+import {ErrorInterceptor} from './interceptors/error-interceptor';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {NgHttpLoaderModule} from 'ng-http-loader';
   ],
   providers: [
     CookieService,
-    {provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })
