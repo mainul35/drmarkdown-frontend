@@ -1,0 +1,38 @@
+stages:
+  - build
+  - test
+
+image: trion/ng-cli
+
+# Build Phase
+# ===========
+build_phae:
+  stage: build
+  before_script:
+    - npm ci
+  script:
+    - ng build --prod --output-hashing=all
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - dist
+      - node_modules
+  only:
+    - master
+# Test Phase
+# ==========
+test_phase:
+  stage: test
+  image: trion/ng-cli-karma:9.0.1
+  allow_failure: false
+  script:
+    - ng test --progress=false --watch=false
+  cache:
+    policy: pull
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - dist
+      - node_modules
+  only:
+    - master
